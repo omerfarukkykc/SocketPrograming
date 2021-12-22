@@ -2,7 +2,7 @@ package SDN;
 import Root.*;
 import java.util.Arrays;
 
-public class Modem {
+public class MRouter {
     public static final int A = 1000;
     public static final int B = 1333;
     public static final int C = 1002;
