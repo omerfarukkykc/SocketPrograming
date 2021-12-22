@@ -15,18 +15,18 @@ public class MRouter {
     public static final int Y = 1009;
     public static void main(String[] args) {
         
-        Router r9 = new Router(X,Y);
-        Router r8 = new Router(H,Y);
-        Router r7 = new Router(G,new int[]{H,X});
-        Router r6 = new Router(F,new int[]{G,X});
-        Router r5 = new Router(E,new int[]{G,H});
-        Router r4 = new Router(D,new int[]{E,F});
-        Router r3 = new Router(C,new int[]{D,F});
-        Router r2 = new Router(B,new int[]{D,E});
-        Router r1 = new Router(A,new int[]{B,C});
+        Router r0 = new Router(X,Y);
+        Router r1 = new Router(H,Y);
+        Router r2 = new Router(G,new int[]{H,X});
+        Router r3 = new Router(F,new int[]{G,X});
+        Router r4 = new Router(E,new int[]{G,H});
+        Router r5 = new Router(D,new int[]{E,F});
+        Router r6 = new Router(C,new int[]{D,F});
+        Router r7 = new Router(B,new int[]{D,E});
+        Router r8 = new Router(A,new int[]{B,C});
         
         
-        r9.start();
+        r0.start();
         r8.start();
         r7.start();
         r6.start();

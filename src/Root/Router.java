@@ -75,12 +75,12 @@ public class Router extends Root{
             int randomInt = randomGenerator.nextInt(100);
             System.out.println("Generated random number for the packet is: " + randomInt);
             if (randomInt > 19) { //for random probability 20%,each packet has a random number between 0 to 99
-                sender.sendMessage(message);
+                sender.sendMessage(this.getName()+","+message);
                 String str = sender.getRequest();
                 System.out.println("message from receiver: " + str);
-                this.sendRequest(str);
+                this.sendRequest(this.getName()+","+str);
             } else {
-                this.sendRequest(str2);
+                this.sendRequest(this.getName()+","+str2);
             }
         } while (!message.equals("***CLOSE***"));
        

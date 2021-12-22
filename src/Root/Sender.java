@@ -63,15 +63,14 @@ public class Sender extends Thread {
             link.setSoTimeout(4000); // Setting timer for sender
 
             String request = this.getRequest();
-
-            str2 = request.substring(0, 3);
-
+            String[] split = request.split(",");
+            str2 = split[split.length-1].substring(0, 3);
             while (!str2.equals("ACK")) {
                 System.out.println(message + counter + " Resending...");
                 output.println(message + counter);
                 attempt++;
-                request = input.nextLine();
-                str2 = request.substring(0, 3);
+                split = this.getRequest().split(",");
+                str2 = split[split.length-1].substring(0, 3);
             }
 
             System.out.println(request + " received from receiver successfully");
