@@ -72,7 +72,6 @@ public class Sender extends Thread {
                 split = this.getRequest().split(",");
                 str2 = split[split.length-1].substring(0, 3);
             }
-
             System.out.println(request + " received from receiver successfully");
             counter++;
         } while (counter < number);

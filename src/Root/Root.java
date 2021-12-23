@@ -47,5 +47,9 @@ public class Root extends Thread{
             }
             return null;
         }
+        public boolean hasMessage(){
+            return sendInput.hasNext();
+        }
+        
     }
 }
