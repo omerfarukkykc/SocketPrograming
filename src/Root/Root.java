@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Root extends Thread{
     protected ServerSocket serverSocket;
@@ -49,6 +51,13 @@ public class Root extends Thread{
         }
         public boolean hasMessage(){
             return sendInput.hasNext();
+        }
+        public void closeConn(){
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Root.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
     }

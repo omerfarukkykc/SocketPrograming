@@ -82,33 +82,41 @@ public class Router extends Root{
             String str2 =null ,str3= null;
             String message;
             Rsender sender;
-            String PortName;
-            if(this.SENDPORTS.length != 1){
-                int PORT = this.SENDPORTS[getRoute(this.SENDPORTS.length)];
-                PortName =" "+ getPortName(PORT) +" ";
-                sender = new Rsender(new Socket(host, PORT));
-            }else{
-                PortName =" "+ getPortName(this.SENDPORTS[0])  +" ";
-                sender = new Rsender(new Socket(host, this.SENDPORTS[0]));
-            }
+            String PortName ;
+            ArrayList<Rsender> list = new ArrayList<>();
+            
+           
+           
             do {
-               
+              
+                
                 message = this.getMessage();
                 System.out.println("message from sender " + message);
                 Random randomGenerator = new Random();
                 int randomInt = randomGenerator.nextInt(100);
                 System.out.println("Generated random number for the packet is: " + randomInt);
-                if (randomInt > 19) { //for random probability 20%,each packet has a random number between 0 to 99
+                if (randomInt > 9) { //for random probability 20%,each packet has a random number between 0 to 99
                     
-                    
+                    if(this.SENDPORTS.length != 1){
+                        int PORT = this.SENDPORTS[getRoute(this.SENDPORTS.length)];
+                        PortName =" "+ getPortName(PORT) +" ";
+                        sender = new Rsender(new Socket(host, PORT));
+                    }else{
+                        PortName =" "+ getPortName(this.SENDPORTS[0])  +" ";
+                        sender = new Rsender(new Socket(host, this.SENDPORTS[0]));
+                    }
                     sender.sendMessage(PortName+","+message);
                     String str = sender.getRequest();
                     System.out.println("message from receiver: " + str);
                     this.sendRequest(PortName+","+str);
+                    sender.closeConn();
+                    sender = null;
+                    System.gc();
+                    Runtime.getRuntime().gc();
                 } else {
                     this.sendRequest(str2);
+                    
                 }
-
             } while (!message.equals("***CLOSE***"));
             return null;
         }
@@ -118,12 +126,13 @@ public class Router extends Root{
             dos.println(message);
         }
         private String getMessage(){
-            while (true) {            
-                if (dis.hasNext()) {
+            while (true) {     
+                if(dis.hasNext()){
                     return dis.nextLine();
                 }
             }
         }
+       
         public boolean getRoute(){
             Random randomGenerator = new Random();
             return randomGenerator.nextBoolean();
@@ -135,7 +144,8 @@ public class Router extends Root{
         }
         public String getPortName(int PORT){
             return switch(PORT){
-                case 1000->"A";
+                case 1000->"X";
+                case 1010->"A";
                 case 1333->"B";
                 case 1002->"C";
                 case 1003->"D";
@@ -143,7 +153,6 @@ public class Router extends Root{
                 case 1005->"F";
                 case 1006->"G";
                 case 1007->"H";
-                case 1008->"X";
                 case 1009->"Y";
                 default->"";
             };

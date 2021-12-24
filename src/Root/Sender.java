@@ -60,7 +60,7 @@ public class Sender extends Thread {
             this.sendMessage(message + counter);
             attempt++;
             
-            link.setSoTimeout(4000); // Setting timer for sender
+            
 
             String request = this.getRequest();
             String[] split = request.split(",");
@@ -70,7 +70,12 @@ public class Sender extends Thread {
                 output.println(message + counter);
                 attempt++;
                 split = this.getRequest().split(",");
-                str2 = split[split.length-1].substring(0, 3);
+                if(split != null){
+                    str2 = split[split.length-1].substring(0, 3);
+                    System.out.println(str2);
+                }
+                
+                
             }
             System.out.println(request + " received from receiver successfully");
             counter++;
@@ -85,10 +90,10 @@ public class Sender extends Thread {
         output.println(message);
     }
     public String getRequest(){
-        while (true) {            
-            if (input.hasNext()) {
+        if(input.hasNext()){
             return input.nextLine();
-            }
+        }else{
+            return "null";
         }
     }
     public void serviceStart(int PORT) {

@@ -11,62 +11,79 @@ public class Receiver extends Root{
     PrintWriter output;    
     public Receiver(int PORT) {
         this.openListenPort(PORT);
-        
     }
-
     @Override
     public void run() {
-        this.startService();
-        try {
-            handleRouter();
-
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
-        } finally {
+        while (true) {            
             try {
-                System.out.println("\n* Closing connections (Receiver side)*");
-                link.close();
-            } catch (IOException ioEx) {
-                System.out.println("Unable to disconnect!");
-                System.exit(1);
+                link = serverSocket.accept();
+                input = new Scanner(link.getInputStream()); //Step 3. 
+                output = new PrintWriter(link.getOutputStream(), true); //Step 3.  
+                Thread th = new ClientHandler(link,input,output);
+                th.start();
+            } catch (IOException ex) {
+                System.err.println("Root.Receiver.startService()");
             }
         }
+       
     }
     
-    private void handleRouter() throws IOException {
-        
-        int numMessages = 0;
-        String message;
-        do {           
-            message = this.getMessage();
-            this.sendMessage("ACK" + numMessages);
-            numMessages++;
-            System.out.println(numMessages + ":" + message);
-        } while (!message.equals("***CLOSE***"));
-        
-    }
-    private boolean startService(){
-        try {
-            link = serverSocket.accept();
-            input = new Scanner(link.getInputStream()); //Step 3. 
-            output = new PrintWriter(link.getOutputStream(), true); //Step 3.  
-            return true;
-        } catch (IOException ex) {
-            System.err.println("Root.Receiver.startService()");
-            return false;
+    
+    class ClientHandler extends Thread
+    {
+        final Scanner dis;
+        final PrintWriter dos;
+        final Socket s;
+
+        // Constructor
+        public ClientHandler(Socket s, Scanner dis, PrintWriter dos)
+        {
+            this.s = s;
+            this.dis = dis;
+            this.dos = dos;
         }
-        
-    }
-    private String getMessage(){
-        
-        while (true) {            
-            if (input.hasNext()) {
-            return input.nextLine();
+
+        @Override
+        public void run()
+        {
+            try {
+                handleRouter();
+
+            } catch (IOException ioEx) {
+                ioEx.printStackTrace();
+            } finally {
+                try {
+                    System.out.println("\n* Closing connections (Receiver side)*");
+                    link.close();
+                } catch (IOException ioEx) {
+                    System.out.println("Unable to disconnect!");
+                    System.exit(1);
+                }
             }
         }
-    }
-    private void sendMessage(String message){
-         output.println(message);
-    }
+        private void handleRouter() throws IOException {
 
+            int numMessages = 0;
+            String message;
+            do {   
+                message = this.getMessage();
+                this.sendMessage("ACK"+ message.substring(message.length() - 1));
+                numMessages++;
+                System.out.println(" - " +message);
+            } while (!message.equals("***CLOSE***"));
+
+        }
+
+        private String getMessage(){
+
+            while (true) {            
+                if (dis.hasNext()) {
+                return dis.nextLine();
+                }
+            }
+        }
+        private void sendMessage(String message){
+             dos.println(message);
+        }
+    }
 }
