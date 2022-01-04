@@ -69,7 +69,7 @@ public class Receiver extends Root{
                 message = this.getMessage();
                 this.sendMessage("ACK"+ message.substring(message.length() - 1));
                 numMessages++;
-                System.out.println(" - " +message);
+                System.out.println(" - Y ," +message);
             } while (!message.equals("***CLOSE***"));
 
         }

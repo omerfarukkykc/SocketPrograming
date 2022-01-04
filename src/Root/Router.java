@@ -9,10 +9,7 @@ public class Router extends Root{
     private Socket listenSocket = null;
     private Scanner listenInput;
     private PrintWriter listenOutput;
-    
     private int SENDPORTS[] = new int[1];
-    
-    
     public Router(int LISTENPORT,int[] SENDPORTS) {
         this.openListenPort(LISTENPORT);
         this.SENDPORTS = SENDPORTS;
@@ -21,13 +18,12 @@ public class Router extends Root{
         this.openListenPort(LISTENPORT);
         this.SENDPORTS[0] = SENDPORTT;
     }
-    //Dinleme servisini başlatır 
     private void startListenService() throws IOException{
         do {            
             listenSocket = serverSocket.accept();
             listenInput = new Scanner(listenSocket.getInputStream());
             listenOutput = new PrintWriter(listenSocket.getOutputStream(), true);
-            Thread CH = new ClientHandler(listenSocket,listenInput,listenOutput,this.SENDPORTS);
+            Thread CH = new ClientHandler(listenSocket,listenInput,listenOutput,this.SENDPORTS,this.LISTENPORT);
             CH.start();
         } while (true);
     }
@@ -60,15 +56,16 @@ public class Router extends Root{
         final PrintWriter dos;
         final Socket s;
         private int SENDPORTS[];
+        private final int PORT;
         // Constructor
-        public ClientHandler(Socket s, Scanner dis, PrintWriter dos ,int[] SENDPORTS)
+        public ClientHandler(Socket s, Scanner dis, PrintWriter dos ,int[] SENDPORTS,int port)
         {
             this.s = s;
             this.dis = dis;
             this.dos = dos;
             this.SENDPORTS = SENDPORTS;
+            this.PORT = port;
         }
-
         @Override
         public void run()
         {
@@ -83,28 +80,24 @@ public class Router extends Root{
             String message;
             Rsender sender;
             String PortName ;
-            ArrayList<Rsender> list = new ArrayList<>();
-            
-           
-           
             do {
-              
-                
                 message = this.getMessage();
-                System.out.println("message from sender " + message);
+                
                 Random randomGenerator = new Random();
                 int randomInt = randomGenerator.nextInt(100);
-                System.out.println("Generated random number for the packet is: " + randomInt);
+                
                 if (randomInt > 9) { //for random probability 20%,each packet has a random number between 0 to 99
                     
                     if(this.SENDPORTS.length != 1){
                         int PORT = this.SENDPORTS[getRoute(this.SENDPORTS.length)];
-                        PortName =" "+ getPortName(PORT) +" ";
+                        PortName =" "+ getPortName(this.PORT) +" ";
+                        
                         sender = new Rsender(new Socket(host, PORT));
                     }else{
-                        PortName =" "+ getPortName(this.SENDPORTS[0])  +" ";
+                        PortName =" "+ getPortName(this.PORT)  +" ";
                         sender = new Rsender(new Socket(host, this.SENDPORTS[0]));
                     }
+                    System.out.println("Router -"+getPortName(this.PORT)+"- message from sender " + message);
                     sender.sendMessage(PortName+","+message);
                     String str = sender.getRequest();
                     System.out.println("message from receiver: " + str);
@@ -114,8 +107,8 @@ public class Router extends Root{
                     System.gc();
                     Runtime.getRuntime().gc();
                 } else {
+                    System.out.println("Package dropped!!! Generated random number for the packet is: " + randomInt);
                     this.sendRequest(str2);
-                    
                 }
             } while (!message.equals("***CLOSE***"));
             return null;

@@ -74,10 +74,10 @@ public class Sender extends Thread {
                     str2 = split[split.length-1].substring(0, 3);
                     System.out.println(str2);
                 }
-                
-                
             }
-            System.out.println(request + " received from receiver successfully");
+            if (str2.equals("ACK")) {
+                System.out.println(request + " received from receiver successfully");
+            }
             counter++;
         } while (counter < number);
         long endTime = System.nanoTime();
