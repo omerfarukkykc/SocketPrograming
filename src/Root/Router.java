@@ -78,11 +78,9 @@ public class Router extends Root{
             }
         }
         private String handleClient() throws IOException {
-            String str2 =null ,str3= null;
+            String str2 =null ;
             String message;
             Rsender sender;
-            Rsender sender1 = null;
-            Rsender sender2 = null;
             String PortName ;
             Random randomGenerator = new Random();
             ArrayList<Rsender> rsender = new ArrayList<>();

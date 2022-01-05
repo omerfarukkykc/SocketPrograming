@@ -35,11 +35,11 @@ public class MRouter {
         r2.start();
         r1.start();
 
-
+//
 //        Router r5 = new Router(D,new int[]{Y});
 //        Router r6 = new Router(C,new int[]{Y});
 //        Router r7 = new Router(B,new int[]{Y});
-//        Router r8 = new Router(A,new int[]{B,C,D});
+//        Router r8 = new Router(X,new int[]{B,C,D});
 //      
 //        r8.start();
 //        r7.start();
@@ -51,7 +51,7 @@ public class MRouter {
 //        Router r5 = new Router(D,new int[]{Y});
 //        Router r6 = new Router(C,new int[]{D});
 //        Router r7 = new Router(B,new int[]{C,D});
-//        Router r8 = new Router(A,new int[]{B,C,D});
+//        Router r8 = new Router(X,new int[]{B,C,D});
 //      
 //        r8.start();
 //        r7.start();
