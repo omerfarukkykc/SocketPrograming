@@ -1,7 +1,9 @@
 package Root;
+import Root.Root.Rsender;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,33 +81,33 @@ public class Router extends Root{
             String str2 =null ,str3= null;
             String message;
             Rsender sender;
+            Rsender sender1 = null;
+            Rsender sender2 = null;
             String PortName ;
+            Random randomGenerator = new Random();
+            ArrayList<Rsender> rsender = new ArrayList<>();
+            for (int port : this.SENDPORTS){
+                rsender.add(new Rsender(new Socket(host, port)));
+            }
+            
+            
             do {
+                sender = rsender.get(getRoute(rsender.size()));
+                
+                
                 message = this.getMessage();
                 
-                Random randomGenerator = new Random();
                 int randomInt = randomGenerator.nextInt(100);
                 
                 if (randomInt > 9) { //for random probability 20%,each packet has a random number between 0 to 99
+                    PortName =" "+ getPortName(this.PORT) +" ";
                     
-                    if(this.SENDPORTS.length != 1){
-                        int PORT = this.SENDPORTS[getRoute(this.SENDPORTS.length)];
-                        PortName =" "+ getPortName(this.PORT) +" ";
-                        
-                        sender = new Rsender(new Socket(host, PORT));
-                    }else{
-                        PortName =" "+ getPortName(this.PORT)  +" ";
-                        sender = new Rsender(new Socket(host, this.SENDPORTS[0]));
-                    }
                     System.out.println("Router -"+getPortName(this.PORT)+"- message from sender " + message);
                     sender.sendMessage(PortName+","+message);
                     String str = sender.getRequest();
                     System.out.println("message from receiver: " + str);
                     this.sendRequest(PortName+","+str);
-                    sender.closeConn();
-                    sender = null;
-                    System.gc();
-                    Runtime.getRuntime().gc();
+                   
                 } else {
                     System.out.println("Package dropped!!! Generated random number for the packet is: " + randomInt);
                     this.sendRequest(str2);
